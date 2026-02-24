@@ -44,8 +44,8 @@ class Fusion_dataset(Dataset):
         self.filenames_vis = []
         self.length = length  # This place can be set up as much as you want to train
         if split == 'train':
-            data_dir_vis = "/KAIST/"  # the path of your data
-            data_dir_ir = "/KAIST/"  # the path of your data
+            data_dir_vis = "/root/autodl-tmp/FusionMamba/KAIST"  # 其实第一个参数无效，会被ir_path覆盖
+            data_dir_ir = "/root/autodl-tmp/FusionMamba/KAIST"  # 关键路径参数，指向最外层数据集文件夹
             dirs = [d for d in os.listdir(data_dir_ir) if not d.startswith('.')]
             dirs.sort()
             for dir0 in dirs:
@@ -62,7 +62,7 @@ class Fusion_dataset(Dataset):
                         self.filepath_vis.append(filepath_vis_)
                         self.filenames_vis.append(file)
             self.split = split
-            # self.length = len(self.filepath_ir)  #if you want to train all data in the dataset
+            self.length = len(self.filepath_ir)  #if you want to train all data in the dataset
         elif split == 'test':
             data_dir_vis = vi_path
             data_dir_ir = ir_path

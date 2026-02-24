@@ -21,6 +21,7 @@ import torch
 from torch.utils.data import DataLoader
 import warnings
 warnings.filterwarnings('ignore')
+torch.backends.cudnn.benchmark = True
 
 def parse_args():
     parse = argparse.ArgumentParser()
@@ -80,15 +81,17 @@ def train_fusion(num=0, logger=None):
     fusionmodel.cuda()
     fusionmodel.train()
     optimizer = torch.optim.Adam(fusionmodel.parameters(), lr=lr_start)
-    train_dataset = Fusion_dataset('train',length=30000)
+    train_dataset = Fusion_dataset('train',length=20000)
     print("the training dataset is length:{}".format(train_dataset.length))
     train_loader = DataLoader(
         dataset=train_dataset,
-        batch_size=2,
+        batch_size=12,
         shuffle=True,
-        num_workers=8,
+        num_workers=16,
         pin_memory=True,
         drop_last=True,
+        prefetch_factor=4,
+        persistent_workers=True
     )
     train_loader.n_iter = len(train_loader)
     criteria_fusion = Fusionloss()
